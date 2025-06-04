@@ -187,7 +187,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             CustomButton(
               isLoading: isLoading,
-              title: "Join",
+              title: "Login",
               onTap: () {
                 if (emailController.text.isNotEmpty &&
                     passwordController.text.isNotEmpty) {
@@ -211,7 +211,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 setState(() => selectedOption = Option.register);
               },
               child: Text(
-                "Don't have a room? Create one",
+                "Not a member? Create an account",
                 style: textfieldPlaceholderStyle.copyWith(
                     decoration: TextDecoration.underline),
               ),
@@ -285,7 +285,7 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Text('Sign up for ChatRoom!', style: headingTextStyle),
+            Text('Sign up for ChatRooms!', style: headingTextStyle),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -299,7 +299,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(height: 0.005.sh),
                 Text('Enter Email', style: textfieldPlaceholderStyle),
                 CustomTextField(
-                    hintText: "Example@chatroon.com",
+                    hintText: "Example@chatroom.com",
                     controller: emailController,
                     inputType: TextInputType.emailAddress,
                     onChanged: (p0) => validateEmail(p0),
