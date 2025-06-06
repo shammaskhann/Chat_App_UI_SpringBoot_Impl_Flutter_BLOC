@@ -24,8 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    _homeCubit = HomeCubit()
-      ..fetchFriends(); // 👈 Auto-fetch on screen creation
+    _homeCubit = HomeCubit()..fetchFriends();
   }
 
   @override
@@ -36,64 +35,59 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return BlocProvider.value(
       value: _homeCubit,
       child: BlocListener<HomeCubit, HomeState>(
         listener: (context, state) {},
-        child: BlocBuilder<HomeCubit, HomeState>(builder: (context, state) {
-          bool isLoading = state is friendsLoading;
-          final List<FriendModel> friends =
-              state is loadedFriends ? state.friends : [];
+        child: BlocBuilder<HomeCubit, HomeState>(
+          builder: (context, state) {
+            bool isLoading = state is friendsLoading;
+            final List<FriendModel> friends =
+                state is loadedFriends ? state.friends : [];
 
-          return Scaffold(
-            backgroundColor: kprimaryColor,
-            appBar: AppBar(
-              title: Text(
-                'Your Chats',
-                style: appbarStyle,
-              ),
-              actions: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 30),
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.push(
+            return Scaffold(
+              backgroundColor: theme.scaffoldBackgroundColor,
+              appBar: AppBar(
+                title: const Text('Your Chats'),
+                actions: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 30),
+                    child: IconButton(
+                      icon: const Icon(Icons.people),
+                      onPressed: () {
+                        Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const FriendsReqScreen()));
-                    },
-                    child: const Icon(
-                      Icons.people,
+                            builder: (context) => const FriendsReqScreen(),
+                          ),
+                        );
+                      },
                     ),
                   ),
-                ),
-              ],
-            ),
-            body: isLoading
-                ? const Center(
-                    child: CircularProgressIndicator(color: kWhiteColor),
-                  )
-                : friends.length == 0 || friends.isEmpty || friends == []
-                    ? SizedBox(
-                        height: 200.h,
-                        child: Center(
-                          child: Text('No Friends Found',
-                              style: subHeadingTextStyle.copyWith(
-                                color: kWhiteColor,
-                              )),
+                ],
+              ),
+              body: isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : friends.isEmpty
+                      ? Center(
+                          child: Text(
+                            'No Friends Found',
+                            style: theme.textTheme.headlineMedium,
+                          ),
+                        )
+                      : ListView.builder(
+                          padding: const EdgeInsets.all(16),
+                          itemCount: friends.length,
+                          itemBuilder: (context, index) {
+                            final FriendModel friend = friends[index];
+                            return ChatTile(friend: friend);
+                          },
                         ),
-                      )
-                    : ListView.builder(
-                        padding: const EdgeInsets.all(16),
-                        itemCount: friends.length,
-                        itemBuilder: (context, index) {
-                          final FriendModel friend = friends[index];
-
-                          return ChatTile(friend: friend);
-                        },
-                      ),
-          );
-        }),
+            );
+          },
+        ),
       ),
     );
   }

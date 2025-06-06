@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:springboot_test_bench/core/constants/app_theme.dart';
 import 'package:springboot_test_bench/presentation/screens/auth/login/login_screen.dart';
+import 'package:springboot_test_bench/presentation/screens/dashboard/dashboard_screen.dart';
 import 'package:springboot_test_bench/presentation/screens/home/home_screen.dart';
 import 'package:springboot_test_bench/presentation/screens/splash/cubit/splash_cubit.dart';
 
@@ -49,7 +50,7 @@ class _SplashScreenState extends State<SplashScreen>
         if (state is SplashAuthenticated) {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => const HomeScreen()),
+            MaterialPageRoute(builder: (context) => const DashboardScreen()),
           );
         } else if (state is SplashUnauthenticated) {
           Navigator.pushReplacement(

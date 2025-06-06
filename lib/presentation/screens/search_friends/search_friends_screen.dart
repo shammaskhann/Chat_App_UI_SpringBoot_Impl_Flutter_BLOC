@@ -30,10 +30,12 @@ class _SearchFriendsScreenState extends State<SearchFriendsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return BlocProvider(
       create: (context) => _searchFriendCubit,
       child: Scaffold(
-        backgroundColor: kprimaryColor,
+        backgroundColor: theme.scaffoldBackgroundColor,
         appBar: AppBar(
           title: const Text('Search Friends'),
         ),
@@ -70,9 +72,8 @@ class _SearchFriendsScreenState extends State<SearchFriendsScreen> {
               child: BlocBuilder<SearchFriendsCubit, SearchFriendsState>(
                 builder: (context, state) {
                   return state.when(
-                    friendRequestSent: (messege) {
-                      return const Center(child: CircularProgressIndicator());
-                    },
+                    friendRequestSent: (message) =>
+                        const Center(child: CircularProgressIndicator()),
                     initial: () =>
                         const Center(child: Text('Search for friends')),
                     loadingAllUsers: () =>
@@ -87,11 +88,19 @@ class _SearchFriendsScreenState extends State<SearchFriendsScreen> {
                           final user = users[index];
                           return ListTile(
                             leading: CircleAvatar(
-                              child: Text(user.username[0].toUpperCase()),
+                              backgroundColor: theme.primaryColor,
+                              child: Text(
+                                user.username[0].toUpperCase(),
+                                style: TextStyle(
+                                    color: theme.colorScheme.onPrimary),
+                              ),
                             ),
                             title: Text(user.username),
                             subtitle: Text(user.email),
                             trailing: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: theme.primaryColor,
+                              ),
                               onPressed: () {
                                 context
                                     .read<SearchFriendsCubit>()
@@ -109,6 +118,9 @@ class _SearchFriendsScreenState extends State<SearchFriendsScreen> {
                         children: [
                           Text('Error: $message'),
                           ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: theme.primaryColor,
+                            ),
                             onPressed: () => context
                                 .read<SearchFriendsCubit>()
                                 .getAllUsers(),

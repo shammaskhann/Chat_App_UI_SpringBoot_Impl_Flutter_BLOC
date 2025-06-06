@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:springboot_test_bench/core/constants/api_urls.dart';
 import 'package:stomp_dart_client/stomp_dart_client.dart';
 import 'package:springboot_test_bench/core/constants/app_theme.dart';
 import 'package:springboot_test_bench/data/models/friend_model.dart';
@@ -51,7 +52,7 @@ class _ChatTileState extends State<ChatTile> {
   void _connectToLastMessageSocket() {
     _lastMessageClient = StompClient(
       config: StompConfig.sockJS(
-        url: 'http://localhost:8080/chat',
+        url: '${ApiConstants.BASE_IP}chat',
         onConnect: _onConnect,
         onWebSocketError: (error) => log('❌ LastMsg Error: $error'),
       ),
@@ -92,39 +93,65 @@ class _ChatTileState extends State<ChatTile> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: ListTile(
-        leading: CircleAvatar(
-          backgroundColor: kprimaryColor,
-          child: Text(widget.friend.username[0].toUpperCase(),
-              style: const TextStyle(color: kWhiteColor)),
-        ),
-        title: Text(widget.friend.username, style: friendTileNameStyle),
-        subtitle: Text(
-          lastMessage ?? 'No messages yet',
-          style: friendTileLastMessageStyle,
-          overflow: TextOverflow.ellipsis,
-          maxLines: 1,
-        ),
-        trailing: Column(
-          children: [
-            Text(
-              timestamp != null ? _formatTimestamp(timestamp!) : '',
-              style: friendTileTimeStyle,
+    final theme = Theme.of(context);
+    final size = MediaQuery.of(context).size;
+
+    return SizedBox(
+      width: size.width * 0.9,
+      child: Card(
+        elevation: 2,
+        margin: const EdgeInsets.symmetric(vertical: 4),
+        child: ListTile(
+          leading: CircleAvatar(
+            backgroundColor: theme.primaryColor,
+            child: Text(
+              widget.friend.username[0].toUpperCase(),
+              style: TextStyle(color: theme.colorScheme.onPrimary),
             ),
-            //Unread Counter
-            const SizedBox(height: 5),
-          ],
-        ),
-        onTap: () async {
-          await fetchChatroom();
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ChatScreen(chatroom: chatroom),
+          ),
+          title:
+              Text(widget.friend.username, style: theme.textTheme.titleMedium),
+          subtitle: Text(
+            lastMessage ?? 'No messages yet',
+            style: theme.textTheme.titleSmall,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
+          trailing: SizedBox(
+            width: size.width * 0.2,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  timestamp != null ? _formatTimestamp(timestamp!) : '',
+                  style: theme.textTheme.labelMedium,
+                ),
+                if (isUnread)
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 4),
+                      padding: const EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        color: theme.primaryColor,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                  ),
+              ],
             ),
-          );
-        },
+          ),
+          onTap: () async {
+            await fetchChatroom();
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ChatScreen(chatroom: chatroom),
+              ),
+            );
+          },
+        ),
       ),
     );
   }

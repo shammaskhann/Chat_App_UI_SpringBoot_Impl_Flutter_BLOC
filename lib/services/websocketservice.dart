@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:springboot_test_bench/core/constants/api_urls.dart';
 import 'package:stomp_dart_client/stomp_dart_client.dart';
 
 // class WebSocketService {
@@ -73,7 +74,7 @@ class WebSocketService {
 
     _stompClient = StompClient(
       config: StompConfig.sockJS(
-        url: 'http://localhost:8080/chat',
+        url: '${ApiConstants.BASE_IP}/chat',
         onConnect: (StompFrame frame) {
           log('✅ Connected to WebSocket in $mode mode');
 

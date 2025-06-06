@@ -9,6 +9,7 @@ const Color ksecondaryColor = Color(0xFFE5E5E5);
 const Color ktextColor = Color(0xFF000000);
 const Color kWhiteColor = Color(0xFFFFFFFF);
 const Color kDangerColor = Color(0xFFE57373);
+
 const Color khintTextColor = Color(0xFFA5A5A5);
 
 // font family
