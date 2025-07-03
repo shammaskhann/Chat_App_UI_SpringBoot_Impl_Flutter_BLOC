@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
@@ -29,15 +30,13 @@ class LoginCubit extends Cubit<LoginState> {
     }
   }
 
-  void register(String username, String email, String password) async {
+  void register(
+      String username, String email, String password, File? profilePic) async {
     emit(const LoginState.registerLoading());
 
     try {
       final bool user = await AuthProvider.registerUser(
-        username,
-        email,
-        password,
-      );
+          username, email, password, profilePic);
       emit(LoginState.registerSuccess(user));
       log("User registered: ${user.toString()}");
     } catch (e) {

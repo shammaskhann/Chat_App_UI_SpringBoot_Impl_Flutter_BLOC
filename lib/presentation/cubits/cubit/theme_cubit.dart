@@ -14,7 +14,6 @@ class ThemeCubit extends Cubit<ThemeState> {
   }
 }
 
-// Light theme using your constants
 final ThemeData lightThemeData = ThemeData(
   brightness: Brightness.light,
   primaryColor: kprimaryColor,

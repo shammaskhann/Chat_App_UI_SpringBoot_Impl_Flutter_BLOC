@@ -106,7 +106,10 @@ class _SearchFriendsScreenState extends State<SearchFriendsScreen> {
                                     .read<SearchFriendsCubit>()
                                     .sendFriendRequest(user.id);
                               },
-                              child: const Text('Add Friend'),
+                              child: Text('Add Friend',
+                                  style: theme.textTheme.labelSmall?.copyWith(
+                                    color: kWhiteColor,
+                                  )),
                             ),
                           );
                         },

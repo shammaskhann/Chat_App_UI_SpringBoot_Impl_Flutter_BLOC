@@ -93,8 +93,8 @@ import 'package:springboot_test_bench/core/constants/app_routes.dart';
 import 'package:springboot_test_bench/core/constants/app_theme.dart';
 import 'package:springboot_test_bench/core/routes/generate_routes.dart';
 import 'package:springboot_test_bench/dependencies/injector.dart';
+import 'package:springboot_test_bench/presentation/cubits/cubit/theme_cubit.dart';
 import 'package:springboot_test_bench/presentation/screens/splash/cubit/splash_cubit.dart';
-import 'package:springboot_test_bench/presentation/theme/cubit/theme_cubit.dart';
 import 'package:stomp_dart_client/stomp_dart_client.dart';
 
 final StompClient stompClient = StompClient(
@@ -142,13 +142,13 @@ class MyApp extends StatelessWidget {
           return MultiBlocProvider(
             providers: [
               BlocProvider(create: (_) => SplashCubit()..checkAuthStatus()),
-              BlocProvider(create: (_) => ThemeCubit()), // Add ThemeCubit here
+              BlocProvider(create: (_) => ThemeCubit()),
             ],
             child: BlocBuilder<ThemeCubit, ThemeState>(
               builder: (context, state) {
                 return MaterialApp(
-                  theme: state.lightTheme, // Use light theme from state
-                  darkTheme: state.darkTheme, // Use dark theme from state
+                  theme: state.lightTheme,
+                  darkTheme: state.darkTheme,
                   themeMode:
                       state.isDarkMode ? ThemeMode.dark : ThemeMode.light,
                   debugShowCheckedModeBanner: false,

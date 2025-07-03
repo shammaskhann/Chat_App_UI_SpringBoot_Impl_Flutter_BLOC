@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:springboot_test_bench/presentation/screens/components/Theme_toggle_button.dart';
+import 'package:springboot_test_bench/presentation/components/ThemeButtonTile.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({super.key});
@@ -15,7 +15,7 @@ class _SettingScreenState extends State<SettingScreen> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
-        children: [Center(child: const ThemeToggleTile())],
+        children: [Center(child: ThemeButtonTile())],
       ),
     );
   }

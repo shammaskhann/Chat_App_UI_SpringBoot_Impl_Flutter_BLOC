@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:springboot_test_bench/core/constants/api_urls.dart';
@@ -11,19 +12,34 @@ class AuthProvider {
   final SharedPreferencesService _prefs;
   AuthProvider(this._prefs);
   static Future<bool> registerUser(
-      String username, String email, String password) async {
+      String username, String email, String password, File? profilePic) async {
     try {
       const url = ApiConstants.AUTH_REGISTER;
-      final response = await http.post(
-        Uri.parse(url),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'username': username,
-          'email': email,
-          'password': password,
-        }),
-      );
-      log(response.body, name: 'AuthProvider.registerUser');
+      log('url: $url', name: 'AuthProvider.registerUser');
+      log('username: $username', name: 'AuthProvider.registerUser');
+      log('email: $email', name: 'AuthProvider.registerUser');
+
+      final request = http.MultipartRequest('POST', Uri.parse(url))
+        ..fields['username'] = username
+        ..fields['email'] = email
+        ..fields['password'] = password;
+      if (profilePic != null) {
+        request.files.add(
+          await http.MultipartFile.fromPath(
+            'profilePic',
+            profilePic.path,
+            filename: profilePic.path.split('/').last,
+          ),
+        );
+      }
+      log('Request fields: ${request.fields}',
+          name: 'AuthProvider.registerUser');
+      log('Request files: ${request.files}', name: 'AuthProvider.registerUser');
+      final response = await request.send();
+      log('Response status: ${response.statusCode}',
+          name: 'AuthProvider.registerUser');
+      final responseBody = await response.stream.bytesToString();
+      log(responseBody, name: 'AuthProvider.registerUser');
       if (response.statusCode == 201) {
         return true;
       } else {

@@ -1,14 +1,17 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:springboot_test_bench/core/constants/app_theme.dart';
 import 'package:springboot_test_bench/dependencies/injector.dart';
 import 'package:springboot_test_bench/presentation/components/button.dart';
 import 'package:springboot_test_bench/presentation/components/textfield.dart';
 import 'package:springboot_test_bench/presentation/screens/auth/login/cubit/login_cubit.dart';
 import 'package:springboot_test_bench/presentation/screens/chat_screen/chat_screen.dart';
+import 'package:springboot_test_bench/presentation/screens/dashboard/dashboard_screen.dart';
 import 'package:springboot_test_bench/presentation/screens/home/home_screen.dart';
 
 enum Option { login, register }
@@ -25,10 +28,20 @@ class _LoginScreenState extends State<LoginScreen> {
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
   final emailController = TextEditingController();
-
+  File? profilePic; // <-- Add this
   String emailErrorPlaceholder = "";
   String passwordErrorPlaceholder = "";
   String usernameErrorPlaceholder = "";
+
+  Future<void> pickProfilePic() async {
+    final picker = ImagePicker();
+    final picked = await picker.pickImage(source: ImageSource.gallery);
+    if (picked != null) {
+      setState(() {
+        profilePic = File(picked.path);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,8 +55,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   content: Text("Login successful!", style: snackbarTextStyle),
                   backgroundColor: Colors.green),
             );
-            Navigator.pushReplacement(context,
-                MaterialPageRoute(builder: (context) => const HomeScreen()));
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const DashboardScreen()));
           } else if (state is loginError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -286,6 +301,29 @@ class _LoginScreenState extends State<LoginScreen> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Text('Sign up for ChatRooms!', style: headingTextStyle),
+            // --- Profile Pic Picker UI ---
+            Column(
+              children: [
+                GestureDetector(
+                  onTap: pickProfilePic,
+                  child: CircleAvatar(
+                    radius: 40,
+                    backgroundColor: kprimaryColor.withOpacity(0.2),
+                    backgroundImage:
+                        profilePic != null ? FileImage(profilePic!) : null,
+                    child: profilePic == null
+                        ? Icon(Icons.camera_alt, color: kprimaryColor, size: 32)
+                        : null,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  "Add Profile Picture (optional)",
+                  style: textfieldPlaceholderStyle,
+                ),
+              ],
+            ),
+            SizedBox(height: 0.02.sh),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -322,8 +360,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 if (usernameController.text.isNotEmpty &&
                     emailController.text.isNotEmpty &&
                     passwordController.text.isNotEmpty) {
-                  context.read<LoginCubit>().register(usernameController.text,
-                      emailController.text, passwordController.text);
+                  context.read<LoginCubit>().register(
+                      usernameController.text,
+                      emailController.text,
+                      passwordController.text,
+                      profilePic ?? null);
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(

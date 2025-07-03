@@ -72,10 +72,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   ? const Center(child: CircularProgressIndicator())
                   : friends.isEmpty
                       ? Center(
-                          child: Text(
-                            'No Friends Found',
-                            style: theme.textTheme.headlineMedium,
-                          ),
+                          child: Text('No Friends Found',
+                              style: theme.textTheme.headlineSmall),
                         )
                       : ListView.builder(
                           padding: const EdgeInsets.all(16),

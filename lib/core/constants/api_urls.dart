@@ -1,6 +1,6 @@
 class ApiConstants {
-  static const String BASE_IP = "http://192.168.18.136:8080/";
-  static const String BASE_URL = "http://192.168.18.136:8080/api/";
+  static const String BASE_IP = "http://localhost:8080/";
+  static const String BASE_URL = "http://localhost:8080/api/";
 
   static const String AUTH_REGISTER = "${BASE_URL}auth/register";
   static const String AUTH_LOGIN = "${BASE_URL}auth/login";
